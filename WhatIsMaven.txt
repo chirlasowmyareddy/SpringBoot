@@ -1,0 +1,36 @@
+What is Maven
+- It's a project management tool.Helps developers with
+    - Build generation
+    - Dependency resolution
+    - Documentation etc.
+- Maven uses POM(Project Object Model) to achieve this
+- when "maven" command is given,it looks for "pom.xml" in the current directory & get needed configuration.
+
+Before maven we used to have ANT where we use to tell what to do and how to do
+and maven only requires what to do and rest will be handled by maven itself(mvn install)
+
+Maven Build Life Cycle
+the phases are sequentially
+
+1st phase - Validate project structure
+2nd Phase - Compile source code
+3rd phase - Test the code(Unit test)
+4th phase - Package(compiled code)(ex:JAR or WAR)
+5th phase - Verify the integrity of the package
+6th phase - Install the package in local repository
+7th phase - deploy the package in remote repository
+
+mvn validate
+mvn compile -cmd will create .class files and keep them in target directory
+It compiles the code using javac
+mvn test
+mvn package - creates a jar and keep in target folder
+mvn verify - can do static code analysis,add checksums.pmd(a plugin) is a static code analyzer where we can check something like unused         variables,finds unused imports,empty catch block,no usage of object,finds duplicate code etc..we can add extra verification checks other than unit test cases
+mvn install - it will install the package in local maven repository.which is typically localted in your user home directory(~/.m2/repository)(in mac).the jar(snapshot) will be placed from target repository to local maven repository
+
+when pom.xml needed any dependecy first it checks local maven repository if it is not there then it goes to remote maven repository downlaods into local maven repo and use it and then it fetches from local itself it is is there in future
+
+mvn deploy - deploy .jar to remote repository
+generally we need to specify where the deployment hould happen otherise it will give eerror like 
+Deployment failed:repository element was not specified in the POM inside distributionManagement element
+in pom.xml we need to give the url and in settings.xml we need to provide username and password

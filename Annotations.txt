@@ -1,0 +1,9 @@
+@Controller - It indicates that the class is responsible for handling incoming HTTP requests
+@RestController - Controller + Response Body
+@ResponseBody - tells the return type of the method should be considered as the http response
+@ResponseMapping - which exactly does the mapping of the API
+    eg: @ResponseMapping(path = "/v1/card" , method = RequestMethod.GET)
+    at class level also eg: @ResponseMapping(value = "/api") .can write common paths in the class level itself
+@GetMapping(path = "/v1/card")  - simplifies
+@PostMapping
+@RequestParam - used to bind,request parameter to controller method parameter.generally it would be by default as true
