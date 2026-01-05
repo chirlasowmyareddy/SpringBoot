@@ -1,0 +1,134 @@
+
+How spring boot finds its beans?
+**-using @ComponentScan annotation,it will scan the specified package and sub-package for classes annotated with
+ @Component,@Service etc.
+-@SpringBootApplication - contains it in-bult
+**-through explicit defining of bean via @Bean annotation in @Configuration class.
+
+
+
+At what time does this beans get created?
+-Eagerness
+    ->Some beans gets created,when we start an application.
+    -> for example:Beans with singleton scope are eagerly initialized
+-Lazy
+    ->Some beans gets created lazily ,when they actually needed.
+    ->For ex:Beans with scope like prototype etc,are lazily initialized
+    ->Beans with @Lazy Annotation.
+
+Lifecycle Of The Bean
+application start
+IOC container started<-configuratio loaded(using @ComponentScan,@Configuration)
+Construct Bean
+Inject Dependency into constructed bean
+@PostConstruct
+Use the Bean
+@PreDestroy
+Bean destroyed
+
+Step-1
+    Application start   
+        ->During application start-up ,spring boot invokes IOC container
+        (ApplicationContext provides the implemenation of IOC Container)
+        ->IOC container makes use of Configuration and @ComponentScan to look out for the classes for which beans need
+        to be created
+        ->generally while we are stating tomcat then WebApplicationContext would be initialized which invokes
+        IOC container
+Step-2 
+    Construction of Beans
+        
+Step-3
+    Inject Dependency into constructed bean
+        ->@Autowired,first look for a bean of the required type
+        ->If bean found,Spring will inject it.Different ways of injection
+            ->Constructor injection
+            ->Field injection
+            ->Setter injection
+        ->if bean is not found ,spring will create one and inject it 
+    @Component
+    public class User{
+        @Autowired
+        Order order;
+
+        public User(){
+            System.out.println("initializing user");
+
+        }
+    }
+
+    @Lazy
+    @Component
+    public class Order{
+        public Order(){
+            System.out.println("Lazy :initializing order");
+        }
+    }
+
+    output in console
+    although we used @lazy annotation the output would be 
+     initializing user
+     Lazy :initializing order
+    if we are not autowiring Order in User then the output would be
+     initializing user
+Step-4 
+    @PostConstruct
+    Perform any task before Bean to be used in the application
+
+    @Component
+    public class User{
+        @Autowired
+        Order order;
+
+        @PostConstruct
+        public void initialize(){
+            System.out.println("Bean has been constructed and dependencies have been injected");
+        }
+
+        public User(){
+            System.out.println("initializing user");
+
+        }
+    }
+    output
+    Initializing user
+    Lazy :initializing order
+    Bean has been constructed and dependencies have been injected
+Step-5
+    Use the Bean in your application
+    means, we are using the bean(Or Object) to invoke some methods to perform some business logic
+Step-6
+    @PreDestroy
+    perform any task before Bean is getting destroyed
+
+    @SpringBootApplication
+    public class SpringbootApplication{
+        public static void main(String args[]){
+            ConfigurableApplication context = SpringApplication.run(SpringBootApplication.class,args);
+            context.close();//generally no need to write this,just for testing purpose
+        }
+    }
+    @Component
+    public class User{
+
+        @PostConstruct
+        public void initialize(){
+            System.out.println("Post construct initiated");
+        }
+
+        @PreDestroy
+        public void PreDestroy(){
+            System.out.println("Bean is about to destroy,in pre destroy method");
+        }
+
+        public User(){
+            System.out.println("initializing user");
+
+        }
+    }
+
+    Output:
+    initializing user
+    Post construct initiated
+    .
+    .
+    Bean is about to destroy,in pre destroy method
