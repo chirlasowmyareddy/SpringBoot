@@ -1,1 +1,33 @@
+Different Types Of Scopes
 
+singleton
+    -Default scope
+    -Only 1 instance is created per IOC(if multiple contollers autowire the user class let only one time the object for that is
+    created and that only will be used by the other classes as well -in simple terms)
+    -Eagerly initiated by IOC (means at the time of application startup,object gets created)
+    Syntax:
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    or
+    @Scope("singleton")
+prototype
+    -Each time new object is created
+    -Its lazy initialized,means when object is created only when its required
+
+Request
+    -New Object is created for each HTTP request.
+    -Lazily initialized
+    -use prozy when user(reuqest scope) is being called by testcontroller(which is singleton)
+    where it creates a dummy object and constructor would not be called actually so like that we can work
+    otherwise it erros as bean will not create etc
+Session
+    -New object is created for each HTTP sessiom
+    -Lazily initialized
+    - when user accesses any endpoint,sessio is created
+    -remains active,till it does not expires
+
+Application 
+ similar to singleton but it is one object for multiple Ioc's very rare use case
+
+
+Questions
+where we would use this scopes i mean how we would select those?
