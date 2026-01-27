@@ -1,0 +1,33 @@
+CSRF(Cross-Site Request Forgery)
+    -user is already authenticated to a site.
+    -CSRF attack tricks a browser  into making unwanted request to a site where user is already authenticated.
+    -applicable  where state  and session is managed
+
+    How to get protected from CSRF attack:
+    -By using CSRF token,this ensures that request originates from the legitimate source.As authenticate forms or website 
+    only append the CSRF token in the request.which server can used to validate the token created at the time of HTTP
+    session creation.
+XSS(Cross Site Scripting)
+    -It allows attacker to put malicious script into web page viewed by others 
+    -like comments section page 
+    -commonly used for stealing the session or deform the website.
+    so when the attacker adds a comment a script which appends the users session id then the user who checks teh comments
+    which uses get api then the script will run and the session id's in the cookie will be easily taken by the attacker.
+
+    How to get protected from XSS attack:
+    -by proper escaping user input (converting special character like < to &lt;)
+    -by properly validating data before rendering.
+CQRS(Cross-Origin Resource Sharing)
+    -Its not an attack but more of a security feature that restrict web pages from making request to Different origin,
+    unless allowed by the server.
+
+    Different origin = protocol+domain+port
+
+    so ,whenever  there is a call between different origin,sever has to allow:
+    -by setting "Access-Control-Allow-Origin" and other header to allow the cross-origin request
+    can be the first line of defense
+SQL Injection
+    In this the attacker,mainipulates SQL query by inserting malicious input into the user field.
+
+    How to get protected from SQL Injection
+    -By parameterized query

@@ -7,3 +7,19 @@
 @GetMapping(path = "/v1/card")  - simplifies
 @PostMapping
 @RequestParam - used to bind,request parameter to controller method parameter.generally it would be by default as true
+/api/fetchUser?firstName=SOWMYA&lastName=
+-
+The framework automatically performs type conversion from the request parameter's string representation to the specified type
+primitve types-such as int,long,float,double,boolean etc
+wrapper classes- Such as Integer,Long,Float,Double,Boolean etc
+string-request parameters are inherently treated as strings only
+enums-you can bind request parameters to enum types
+Custom object types-we can do it using a registered PropertyEditor
+
+@PathVariable-used to extract values from the path of teh URL and help to bind it to controller method parameter
+@RequestBody-bind the body of http request(typically json) to controller method parameter(java object)
+@JsonProperty
+ResponseEntity- It represent the entire HTTP response
+it will consider as a view and checks for the file name if it is not marked explicitly as ResponseEntity<String> when we are using @Controller and without @ResponseBody
+actually @ResponseBody will implicalty create responseentity if not mentioned also 
+so by using @RestController no need to mention 

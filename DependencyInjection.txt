@@ -1,0 +1,29 @@
+The Problem?
+generally if we are trying to create an object of another class using new key word in a class then that would be a tight coupling
+and it future let us suppose Order class became an interface and two child classes came up which are OnlineOrder,OfflineOrder
+and can we do somenting like this
+Order order = new OnlineOrder();?
+
+It breaks Dependency injection rule of S.O.L.I.D principle
+    -this principle says that DO NOT DEPEND on concrete implemenation,rather depends on abstraction
+so fix  this we need to do something like this
+public class User{
+    Order order;
+
+    public User(Order orderObj){
+        this.order= orderObj;//here the extrenal will pass the obj so which follows dependency injection principle
+    }
+}
+
+So in spring boot this is handled by dependecy injection
+-using DI ,we can make our child independent of its dependencies.
+-It helps to remove the dependecy on concrete implemenation and inject the dependencies from external source(spring).
+though @Autowired spring injects the dependencies
+we have three ways to do this
+-Field injection
+-Setter injection
+-Constructor Injection
+
+Field Injection
+    -Dependency is set on the fields of the class directly
+    -Spring uses reflection ,it iterates over the fields and resolve the dependency.

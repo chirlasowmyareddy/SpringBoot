@@ -1,0 +1,47 @@
+Bean 
+ It is a java object ,which is managed by spring container(also known as IoC container)
+ IoC container->contains all the beans which get created and also manage them
+How to create a Bean   
+    - using @component annotation
+    - using @Bean annotation
+ @component annotation
+    -follows convention over configuration approach
+    -means spring boot will try to auto configure based on conventions reducing the need for explicit configuration
+    -@controller,@service etc,all are internally tells spring to create bean and manage it
+when we explicitly create a constructor with arguments and all @component when creating object doesn't create/or have 
+default consturctor and also spring boot doesn't know what to pass in the consturctor parameters which makes application failed
+ to start so then comes @Bean,where we provide the configuration details and tells spring boot to use it while creating bean
+ where we need to write some external configuration such that spring does take auto configuration
+
+ @Configuration 
+ public class AppConfig{
+    @Bean
+    public User createUserBean(){
+        return new User("defaultusername","defaultemail);
+    }
+ }
+
+ if we kept @component at the class User level also with defaylt constructor also being present then also
+ it prioritize external sonfiguration only
+
+ if we add 2 times in configuration file,then spring will create 2 beans of it
+
+ 
+ @Configuration 
+ public class AppConfig{
+    @Bean
+    public User deafaultUserBean(){
+        return new User("defaultusername","defaultemail);
+    }
+
+    @Bean
+    public User createAnotherUserBean(){
+        return new User("anotherusername","anotheremail);
+    }
+ }
+
+ How spring boot finds these beans?
+  -
+ At what time these beans are created?
+
+ 
