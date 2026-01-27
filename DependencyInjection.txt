@@ -1,6 +1,8 @@
 The Problem?
-generally if we are trying to create an object of another class using new key word in a class then that would be a tight coupling
-and it future let us suppose Order class became an interface and two child classes came up which are OnlineOrder,OfflineOrder
+generally if we are trying to create an object of another class using new key word in a class then that would be a tight 
+coupling
+and it future let us suppose Order class became an interface and two child classes came up which are OnlineOrder,
+OfflineOrder
 and can we do somenting like this
 Order order = new OnlineOrder();?
 
@@ -27,3 +29,36 @@ we have three ways to do this
 Field Injection
     -Dependency is set on the fields of the class directly
     -Spring uses reflection ,it iterates over the fields and resolve the dependency.
+
+When we are using qualifier then it breaks the principle of dynamically initializing the bean
+so there are 2 approaches
+1.using @Qualifier 
+    where we autowire the two classes online order and offline order and takes what we need to perform in the reuqest 
+    parameter
+    boolean isOnlinezOrder
+
+    if(isOnlineOrder){
+        onlineOrderObj.createOrder();
+    }
+    else{
+        OfflineOrderObj.createOrder();
+    }
+
+    this is the commonly used industry standard
+2.@Bean and @Value annotation
+    the value comes from configuration files(application.properties),inline literals
+
+    @Configuration 
+    public class AppConfig{
+        @Bean
+        public Order createOrderBean(@Value("${isOrderOnline})" boolean isOnlineOrder){
+            if(isOnlineOrder) return new OnlineOrder();
+            else return new OfflineOrder();
+        }
+    }
+
+    so in the class code if Order interface is autowired the spring will check if the component is written if not then it
+    checks the configuration files for the bean.and when by seeing application.properties it finaly says what class needs 
+    to be used in the code
+
+    in these two ways we can dynamically initialize the beans
