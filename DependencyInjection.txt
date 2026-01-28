@@ -62,3 +62,116 @@ so there are 2 approaches
     to be used in the code
 
     in these two ways we can dynamically initialize the beans
+
+
+@ConditionalOnProperty
+bean is created conditionally(mean bean can be created or not)
+why?
+how can we unclutter the application context with unnecassary beans(imp interview question)**
+answer
+through this annotation
+
+Interview questions
+we want to create only 1 bean either MySQLConnection or NoSQLConnection.(use case is when we are trying to migrate from
+to nosql database)
+
+we have 2 components,sharing same codebase,but 1 component need MySQLConnection and other needs NoSQLConnection
+
+@Component
+@ConditionalOnProperty(prefix = "sqlconection",value="enabled",havingValue="true",matchIfMissing=false)
+public class MySQLConnection{
+    MySQLConnection(){
+        System.out.println("initializing MySQLConnection bean");
+    }
+}
+
+@Component
+@ConditionalOnProperty(prefix = "nosqlconection",value="enabled",havingValue="true",matchIfMissing=false)
+public class NOSQLConnection{
+    NoSQLConnection(){
+        System.out.println("initializing NoSQLConnection bean");
+    }
+}
+
+@Component
+public class DBConnection{
+    @Autowired(required = false)
+    MySQLConnection mySQLConnection;
+
+    @Autowired(required = false)
+    NoSQLConnection noSQLConnection;
+
+    @PostConstruct
+    public void init(){
+        System.out.println("DB COnnection  bean created with following dependecies")
+        System.out.println("is MySQLConnection object NUll: "+Objects.isNull(mySQLConnection));
+        System.out.println("is noSQLConnection object NUll: "+Objects.isNull(noSQLConnection));
+    }
+}
+
+the prefix and value form the key in the application.properties
+sqlconection.enabled=true
+required for autowired is mandatory
+
+Advantages
+    Toggling of feature
+    Avoid cluttering Application Context with un-necessary beans
+    Save Memory
+    Reduce application Startup time
+Disadvantages
+    Misconfiguration can happen
+    Code complexity when it is over used
+    multiple bean creation with same configuration,brings confusion
+    complexity in managing
+
+for the second interview question which is 
+you have 2 applications and 1 common code base,how you will make sure that,bean is only
+created for 1 application,not for other?
+the answer would be a mix of @ConditionalOnProperty and @Profile
+
+in shreyansh point of view
+we can achieve using both 
+But @Profile is technically intended for environment separation rather than applicaion specific bean creation.
+
+spring.profiles.active=stage in application.properties
+mvn spring-boot:run -Dspring-boot.run.profiles=prod //if we want to dynamicallys set the profile
+mvn spring-boot:run -Pproduction //we can add the profiles in pom.xml as well somwthing like
+<profiles>
+    <profile>
+        <id>dev</id>
+        <properties>
+            <spring-boot.run.profiles>dev</spring-boot.run.profiles>
+        </properties>
+    </profile>
+    <profile>
+        <id>production</id>
+        <properties>
+            <spring-boot.run.profiles>prod</spring-boot.run.profiles>
+        </properties>
+    </profile>
+using @Profile annotation, we can tell spring boot,to create bean only when particular profile is set
+
+@Component
+@Profile("prod")
+public class MySQLConnection{
+    @Value("${username})
+    String username;
+
+    @PostConstruct
+    public void init(){
+        System.out.println("MySql username: "+username);
+    }
+}
+//so the bean will not be created
+
+application.properties
+username=default user
+spring.profile.active=dev
+
+applcation-dev.properties
+username=dev user
+application-prod.properties
+username=prod user
+
+but coming to the question it doesnt make any sense to keep as spring.profiles.active=app1 and app2 in profiles so 
+ConditionalOnProperty is making more sense.
