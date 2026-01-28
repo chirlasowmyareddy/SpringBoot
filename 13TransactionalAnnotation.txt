@@ -1,0 +1,25 @@
+Critical Section 
+    Code segement,where shared resources are being accessed and modified
+Problem
+    when multiple requests try to access this critical section,Data inconsistency can happen
+Solution
+    usage of TRANSACTION 
+    -It helps to achieve ACID properties
+In spring boot we use @Transactional annotation to achieve this
+@Transactional can be applied at the 
+    -class level
+        then it automatically applied to all public methods but not the private methods in the class
+    -method level
+        applied to particular method only
+Transactional management in spring boot used AOP
+    where all the verbose code like begin transaction - if success then commit or else role back-end transaction
+    is handled internally by aop only and we need to just bother about the business logic
+    so all these things are present in an aspect
+    -so the AOP has pointcut expressions and aspect
+    the poitncut expression looks something like this
+    @within(org.springframework.transaction.annotation.Transactional)
+        - which checks for @Transactional annotation
+    once point cut expression matches,run an "Around" type Advice
+    Advice is:
+        invokeWithinTransaction method present in TransactionalInterceptor class.
+    Note:when the applcation started to run tehn only all the point cut expressions are being called or executed
