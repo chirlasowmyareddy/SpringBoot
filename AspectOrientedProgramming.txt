@@ -1,0 +1,53 @@
+-In simple terms ,it helps to intercept the method invocation.And we can perform the task before and after
+the method.
+-AOP allow us to focus on business logic by handling boilerplate and repititive code like logging,
+transaction management etc
+-So aspect is a module which handles the reptitive boilerplate code
+-helps in achieving readability and maintainability of the code
+
+used during logging,transaction management,security etc
+
+
+@RestController
+@RequestMapping(value="/api")
+public class Employee{
+    @GetMapping(path = "/fetchEmployee")
+    public String fetchEmployee(){
+        return "item fetched";
+    }
+}
+@Component
+@Aspect
+public class LoggingAspect{
+
+    @Before("execution(public String  com.conceptandcoding.learningspringboot.Employee.fetchEmployee())")
+    public void beforeMethod(){
+        System.out.println("inside beforeMethod aspect");
+    }
+}
+
+("execution(public String  com.conceptandcoding.learningspringboot.Employee.fetchEmployee())")-->this is called a pointcut
+it is an expression which tells where an ADVICE should be applied
+Types of pointcut
+Execution->matches a particular method in a particular class
+Within->matches all methods withing any class or package
+    @Before("within(com.conceptandcoding.learningspringboot.Employee)")
+@withing->matches any method in a class which has this annotation
+@annotation->matches any method that is annotated with given annotation
+Args->matches any method with particular arguments(or parameters)
+@args->matches any method with particular parameters and that paramter class is annotated with particular annotation
+target->matches any method on a particular instance of a class
+
+@Before
+    public void beforeMethod(){
+        System.out.println("inside beforeMethod aspect");
+    }
+this is called as an ADVICE
+Its an action, which is taken @Before or @After or @Around the method execution
+@Around->it surround the method execution(before and after both).
+where to need to expliciltly call the method to execute using joinPoint.proceed();
+
+
+few questions to have
+How this interception works?
+what if we have 1000 of pointcuts,so whenever i invoke a method,does matching happens with 1000s of pointcuts?
