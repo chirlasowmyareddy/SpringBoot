@@ -1,0 +1,12 @@
+Async
+    -used to mark method that should run asynchronously
+    -Runs in a new thread,without blocking the main thread
+during application startup ,spring boot sees that,ThreadPoolTaskExecutor bean is present not normal ThreadPoolExecutor ,
+so it so it uses that instaed of using default executor which is "SimpleAsyncTaskExecutor"
+so when we are using plain java executor we need to mention it beside Async annotation so that it picks that up
+if it is ThreadPoolTaskExecutor no need to mention because the code itslef will look for that
+
+Industry standard is
+I always want to set my executor as default one ,even if anyone use @Async,my executor only should be picked
+-we need to implement AsyncConfigurer in the AppConfig and override getAsynExecutor method
+it is not a bean as it is not a singleton too so need to handle that using if null only create thread pool

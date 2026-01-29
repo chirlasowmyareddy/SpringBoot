@@ -1,0 +1,72 @@
+Conditions For @Async annotation to work properly?(interiew question)
+    -If @Async annotation is applied to a method within the same class from which it is being called,then
+    proxy mechanism is skipped  because internal method calls are NOT INTERCEPTED
+    Method annoatated with @Async should be public.And again AOP interception works only on public methods
+
+How Async and transaction management works together?(interview question)
+    usecase-1->transaction context do not transfer from caller thread to new thread which got created by Async(so this 
+    should be avoided)
+    usecase-2->use with precaution, as new thread will be created and have transaction management too but context is not same
+    as parent thread.So propagation will not work as expectd
+    usecase-3->and Industry standard is use async and then the method which has async calls another method which would
+    have Transactional annotation
+
+when an async method caught some exception then how are you going to handle
+1.when the async method as a return type
+    it can be try and catched by dng like this
+
+@RestController
+@RequestMapping("/api")
+public class UserController{
+    @Autowired
+    UserService userService;
+    @GetMapping(path="/getUser")
+    public String getUserMethod(){
+        CompletableFuture<String>result = userService.performAsyncTask();
+        String answer = null;
+        try{
+            answer =result.get();
+        }catch(Exception e){
+
+        }
+        return answer;
+    }
+}
+@Component
+public class UserService{
+    @Async
+    public CompletableFuture<Strin> performAsyncTask(){
+        return CompletableFuture.completedFuture("async task result");
+    }
+}
+2.when the async method does not have any return type
+    1.within method Async itself
+
+        @RestController
+        @RequestMapping("/api")
+        public class UserController{
+            @Autowired
+            UserService userService;
+            @GetMapping(path="/getUser")
+            public String getUserMethod(){
+                userService.performAsyncTask();
+                return "";
+            }
+        }
+        @Component
+        public class UserService{
+            @Async
+            public void performAsyncTask(){
+                try{
+                    //perform some task
+                }catch(Exception e){
+                    //handle exception here
+                }
+            }
+        }
+
+    2.Implement Custom AsyncExceptionHandler
+        -generaly in async if we did not try catch then spring boot gives us AsyncUncaughtExceptionHandler which takes 
+        care of everything i mean it logs teh exception
+        -but if we want we can create a component which implements the class AsyncUncaughtExceptionHandler and the appconfig 
+        should implement AsyncConfigurer and do ..
