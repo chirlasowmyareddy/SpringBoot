@@ -1,0 +1,89 @@
+Response generally containes 3 parts
+    Status Code-HTTP return code like 200,500 etc
+    Header->Additional Information(Optional)
+    Body->data need to be sent in the response
+
+    we can use ResponseEntity<T> to create response where T represnts the type of the body
+    This uses a builder pattern so body should be at last only
+    package SpringBoot;
+
+    public class ResponseCodes {
+        
+        @GetMapping(path ="/get-user")
+        public ResponseEntity<String> getUser(){
+            
+            HttpHeaders header = new HttpHeaders();
+            header.add("header1","somevalue1");
+            header.add("header2","somevalue2);
+
+            return ResponseEntity.status(HttpStatus.OK)
+            .headers(header)
+            .body("my response body object here");
+        }
+
+        @DeleteMapping(path ="/delete-user")
+        public ResponseEntity<Void> getUser(){
+            
+            HttpHeaders header = new HttpHeaders();
+            header.add("header1","somevalue1");
+            header.add("header2","somevalue2);
+
+            return ResponseEntity.status(HttpStatus.OK)
+            .headers(header)
+            .build()
+        }
+    }
+
+    So what to do when we dont wont to add any body in the response
+    then we should use build method 
+    <T> ResponseEntity<T> build()// which keeps null in the body only
+
+    By default the status code would be 200 so we no need to explicity mention that if we want something else
+    then we need to use ResponseEntity explicilty
+
+    and this is also correct as spring boot internally wraps User with ResponseEntity only
+
+    @RestController
+    @RequestMapping(value = "/api")
+    public class UserController {
+
+        @GetMapping(path ="/get-user")
+            public User getUser(){
+                
+                User userObj = new User(1,"sowmya");
+                return userObj;
+            }
+    }
+
+
+
+_____________________________________________________
+@ResponseBody
+    when we return a string or POJO directly from the class then @ResponseBody annotation is required
+    Why?
+        It tells to consider the value as the Response Body and not a View(i.e SB will try to look the file with that name)
+
+    @RestController is a combination of ..+@Controller+@ResponseBody
+
+_____________________________________________________
+
+Response Codes 
+    1xx(Informational)
+        example when the server wants to talk to the client internally not the final response it returns the status code 
+        with 1xx.Used very rarely by us
+
+        i.e Interim response to communicate request progress or its status before processing the final request
+    2xx(Success)
+        200-OK,POST(Idempotent),GET
+        201-Created()(POST)
+        202-Accepted(POST)
+        204-No Content(DELETE)
+        206-Partial Content(POST)
+    3xx(Redirectional)
+        Client must take additional action to complete the request
+
+    4xx(Validation Error)
+        409 is also there
+
+    5xx(Server Error)
+        Request got failed at server,even though client passed the valid request.Means something wrong at server
