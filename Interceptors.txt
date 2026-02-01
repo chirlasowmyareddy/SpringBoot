@@ -1,0 +1,10 @@
+Interceptors
+    it's a mediator,which get invoked before or after your actual code
+    we generally write them for
+        -Spring boot caching
+        -" " logging
+        -" " authentication etc
+
+    Custom interceptors for requests before even reaching to specific Controller class.
+    Custom interceptors for requests after reaching to specific Controller class.
+        we keep retention and target on the interfaces for which an aspect we write(may be wrong writing)
