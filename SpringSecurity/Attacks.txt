@@ -21,7 +21,7 @@ CQRS(Cross-Origin Resource Sharing)
     -Its not an attack but more of a security feature that restrict web pages from making request to Different origin,
     unless allowed by the server.
 
-    Different origin = protocol+domain+port
+    Different origin = protocol+domain+port 
 
     so ,whenever  there is a call between different origin,sever has to allow:
     -by setting "Access-Control-Allow-Origin" and other header to allow the cross-origin request
